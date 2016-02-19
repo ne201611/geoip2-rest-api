@@ -1,0 +1,756 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "GeoIP API",
+        "description": "Enrich your IP and ASN data with geographical metadata. This API gives \naccess to Maxmind GeoIP2 databases 'City' and 'ISP'. For more information\non these database have a look at *www.maxmind.com/en/geoip2-databases*. \n",
+        "version": "1.0.0"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "basePath": "/geoip",
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/ip/{ip-address}": {
+            "get": {
+                "summary": "Get geographical information on the given IP-address",
+                "description": "This endpoint will return the most commonly used geographical\nmeta data for the given IP-address; ASN, organization name, \ncountry code, city and location.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of geographical data",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/IpResource"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No data on this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/all": {
+            "get": {
+                "summary": "Get the complete geographical record for the given IP-address",
+                "description": "This endpoint will return the all the geographical meta data for the \ngiven IP-address that we have in our database.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of geographical data",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CompleteIpResource"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No data on this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/asn": {
+            "get": {
+                "summary": "Get AS-number of given IP-address",
+                "description": "This single resource endpoint only returns the AS-number for the given\nIP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The AS-number of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No ASN found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/as_org": {
+            "get": {
+                "summary": "Get the organization of the ASN for the given IP-address",
+                "description": "This single resource endpoint only returns the name of the organization \nregistered to the ASN for the given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The organization of the ASN",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No ASN organization found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/city": {
+            "get": {
+                "summary": "Get the name of the city for the given IP-address",
+                "description": "This single resource endpoint only returns the name of the city for  \nthe given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The city of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No city found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/city_gid": {
+            "get": {
+                "summary": "Get the GeoNames ID of the city for the given IP-address",
+                "description": "This single resource endpoint only returns the GeoNames ID of the \ncity for the given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "GeoNames ID of city",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No GeoNames ID for this city found"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/country": {
+            "get": {
+                "summary": "Get the name of the country for the given IP-address",
+                "description": "This single resource endpoint only returns the name of the country for  \nthe given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The country of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No country found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/country_code": {
+            "get": {
+                "summary": "Get the country code for the given IP-address",
+                "description": "This single resource endpoint only returns the name of the country code \nfor the given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The country code of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No country code found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/country_gid": {
+            "get": {
+                "summary": "Get the GeoNames ID of the country for the given IP-address",
+                "description": "This single resource endpoint only returns the GeoNames ID of the \ncountry for the given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "GeoNames ID of country",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No GeoNames ID for this country found"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/continent": {
+            "get": {
+                "summary": "Get the name of the continent for the given IP-address",
+                "description": "This single resource endpoint only returns the name of the continent for  \nthe given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The continent of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No continent found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/continent_code": {
+            "get": {
+                "summary": "Get the continent code for the given IP-address",
+                "description": "This single resource endpoint only returns the continent code for the\ngiven IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The continent code of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No continent code found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/continent_gid": {
+            "get": {
+                "summary": "Get the GeoNames ID of the continent for the given IP-address",
+                "description": "This single resource endpoint only returns the GeoNames ID of the \ncontinent for the given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "GeoNames ID of continent",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No GeoNames ID for this continent found"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/latitude": {
+            "get": {
+                "summary": "Get latitude for the given IP-address",
+                "description": "This single resource endpoint only returns the latitude of the given\nIP-address in decimal degree notation.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The latitude coordinate of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No latitude found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/longitude": {
+            "get": {
+                "summary": "Get longitude for the given IP-address",
+                "description": "This single resource endpoint only returns the longitude of the given\nIP-address in decimal degree notation.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The longitude coordinate of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No longitude found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/location": {
+            "get": {
+                "summary": "Get latitude and longitude coordinates for the given IP-address",
+                "description": "This single resource endpoint only returns the location coordinates of \nthe given IP-address. The location consists of latitude and longitude\ncoordinates in a decimal degree (DD) notation.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The location coordinates of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No location found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/isp": {
+            "get": {
+                "summary": "Get the Internet Service Provider for the given IP-address",
+                "description": "This single resource endpoint only returns the name of the Internet \nService Provider for the given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The ISP of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No ISP found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/org": {
+            "get": {
+                "summary": "Get the organization for the given IP-address",
+                "description": "This single resource endpoint only returns the name of the organization \nfor the given IP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The organization of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No organization found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
+        "/ip/{ip-address}/tz": {
+            "get": {
+                "summary": "Get the time zone for the given IP-address",
+                "description": "This single resource endpoint only returns the time zone for the given \nIP-address.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ip-address",
+                        "in": "path",
+                        "description": "Query this IP-address",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The time zone of the IP-address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "No time zone found for this IP-address"
+                    },
+                    "406": {
+                        "description": "Input is not a valid IP-address"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "IpResource": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string",
+                    "description": "The IP address queried"
+                },
+                "asn": {
+                    "type": "integer",
+                    "description": "AS number of the organization"
+                },
+                "org": {
+                    "type": "string",
+                    "description": "Name of organization"
+                },
+                "country_code": {
+                    "type": "string",
+                    "description": "Country code (ISO 3166-1 alpha-2)"
+                },
+                "city": {
+                    "type": "string",
+                    "description": "Name of city"
+                }
+            }
+        },
+        "CompleteIpResource": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string",
+                    "description": "The IP address queried"
+                },
+                "asn": {
+                    "type": "integer",
+                    "description": "AS number of the organization"
+                },
+                "asn_org": {
+                    "type": "string",
+                    "description": "The organization name registered for this ASN"
+                },
+                "org": {
+                    "type": "string",
+                    "description": "Name of organization"
+                },
+                "city": {
+                    "type": "string",
+                    "description": "Name of city"
+                },
+                "city_gid": {
+                    "type": "integer",
+                    "description": "GeoNames ID of city"
+                },
+                "country": {
+                    "type": "string",
+                    "description": "Name of city"
+                },
+                "country_code": {
+                    "type": "string",
+                    "description": "Country code (ISO 3166-1 alpha-2)"
+                },
+                "country_gid": {
+                    "type": "integer",
+                    "description": "GeoNames ID of country"
+                },
+                "continent": {
+                    "type": "string",
+                    "description": "Name of contient"
+                },
+                "continent_code": {
+                    "type": "string",
+                    "description": "Continent code"
+                },
+                "continent_gid": {
+                    "type": "integer",
+                    "description": "GeoNames ID of continent"
+                },
+                "isp": {
+                    "type": "string",
+                    "description": "Name of Internet Service Provider"
+                },
+                "latitude": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Latitude in decimal degree notation"
+                },
+                "longitude": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Longitude in decimal degree notation"
+                },
+                "location": {
+                    "type": "string",
+                    "description": "Combined latitude and logitude"
+                },
+                "tz": {
+                    "type": "string",
+                    "description": "Time zone"
+                }
+            }
+        }
+    }
+}
